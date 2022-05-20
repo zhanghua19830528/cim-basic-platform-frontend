@@ -1,48 +1,98 @@
 <template>
-  <div id="cesiumContainer"></div>
+  <div class="dashboard-editor-container">
+
+    <panel-group @handleSetLineChartData="handleSetLineChartData" />
+
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <line-chart :chart-data="lineChartData" />
+    </el-row>
+
+    <el-row :gutter="32">
+      <el-col :xs="24" :sm="24" :lg="8">
+        <div class="chart-wrapper">
+          <raddar-chart />
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="24" :lg="8">
+        <div class="chart-wrapper">
+          <pie-chart />
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="24" :lg="8">
+        <div class="chart-wrapper">
+          <bar-chart />
+        </div>
+      </el-col>
+    </el-row>
+
+    
+  </div>
 </template>
 
 <script>
-//暂时没有看出应用源码的路径还是编译过的路径的区别
+import PanelGroup from './dashboard/PanelGroup'
+import LineChart from './dashboard/LineChart'
+import RaddarChart from './dashboard/RaddarChart'
+import PieChart from './dashboard/PieChart'
+import BarChart from './dashboard/BarChart'
 
-import "cesium/Source/Widgets/widgets.css";
-import * as Cesium from "cesium/Source/Cesium";
+const lineChartData = {
+  newVisitis: {
+    expectedData: [100, 120, 161, 134, 105, 160, 165],
+    actualData: [120, 82, 91, 154, 162, 140, 145]
+  },
+  messages: {
+    expectedData: [200, 192, 120, 144, 160, 130, 140],
+    actualData: [180, 160, 151, 106, 145, 150, 130]
+  },
+  purchases: {
+    expectedData: [80, 100, 121, 104, 105, 90, 100],
+    actualData: [120, 90, 100, 138, 142, 130, 130]
+  },
+  shoppings: {
+    expectedData: [130, 140, 141, 142, 145, 150, 160],
+    actualData: [120, 82, 91, 154, 162, 140, 130]
+  }
+}
 
 export default {
-  name: "Map",
-  mounted() {
-    this.init();
+  name: 'Index',
+  components: {
+    PanelGroup,
+    LineChart,
+    RaddarChart,
+    PieChart,
+    BarChart
+  },
+  data() {
+    return {
+      lineChartData: lineChartData.newVisitis
+    }
   },
   methods: {
-    init() {
-       Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjMzU2ZTQyYy1iOTU5LTQ5MDQtOGNkNC0yYzcxMTI1ZDJiZGQiLCJpZCI6NzY1OTcsImlhdCI6MTYzOTU2MDcwOH0.kbWigipGD6l2OPBGpnkkN6dzp8NuNjoHNNM1NF4gaIo';
-
-    // Initialize the Cesium Viewer in the HTML element with the `cesiumContainer` ID.
-    const viewer = new Cesium.Viewer('cesiumContainer', {
-      terrainProvider: Cesium.createWorldTerrain()
-    });    
-    // Add Cesium OSM Buildings, a global 3D buildings layer.
-    const buildingTileset = viewer.scene.primitives.add(Cesium.createOsmBuildings());   
-    // Fly the camera to San Francisco at the given longitude, latitude, and height.
-    viewer.camera.flyTo({
-      destination : Cesium.Cartesian3.fromDegrees(-122.4175, 37.655, 400),
-      orientation : {
-        heading : Cesium.Math.toRadians(0.0),
-        pitch : Cesium.Math.toRadians(-15.0),
-      }
-    });
-
+    handleSetLineChartData(type) {
+      this.lineChartData = lineChartData[type]
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
-#cesiumContainer {
-  width: 100vw;
-  height: 100vh;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
+.dashboard-editor-container {
+  padding: 32px;
+  background-color: rgb(240, 242, 245);
+  position: relative;
+
+  .chart-wrapper {
+    background: #fff;
+    padding: 16px 16px 0;
+    margin-bottom: 32px;
+  }
+}
+
+@media (max-width:1024px) {
+  .chart-wrapper {
+    padding: 8px;
+  }
 }
 </style>
