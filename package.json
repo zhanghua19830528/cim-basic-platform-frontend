@@ -1,8 +1,8 @@
 {
-  "name": "ruoyi",
-  "version": "3.8.2",
-  "description": "若依管理系统",
-  "author": "若依",
+  "name": "cim",
+  "version": "0.0.1",
+  "description": "CIM基础平台",
+  "author": "cdg_zhanghua",
   "license": "MIT",
   "scripts": {
     "dev": "vue-cli-service serve",
@@ -21,19 +21,6 @@
       "eslint --fix",
       "git add"
     ]
-  },
-  "keywords": [
-    "vue",
-    "admin",
-    "dashboard",
-    "element-ui",
-    "boilerplate",
-    "admin-template",
-    "management-system"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://gitee.com/y_project/RuoYi-Vue.git"
   },
   "dependencies": {
     "@riophae/vue-treeselect": "0.4.0",
