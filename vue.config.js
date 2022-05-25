@@ -57,6 +57,9 @@ module.exports = {
   },
   configureWebpack: {
     name: name,
+    //调试javascript代码
+    devtool: 'source-map',
+  
     resolve: {
       alias: {
         '@': resolve('src')

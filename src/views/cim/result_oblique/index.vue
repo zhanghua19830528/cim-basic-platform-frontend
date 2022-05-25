@@ -38,31 +38,9 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="success"
+          type="info"
           plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['cim:result_oblique:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['cim:result_oblique:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
+          icon="el-icon-date"
           size="mini"
           @click="handleExport"
           v-hasPermi="['cim:result_oblique:export']"
@@ -75,16 +53,21 @@
       <el-table-column type="selection" width="50" align="center" />
       <el-table-column label="序号" width="50" align="center" prop="id" />
       <el-table-column label="名称" align="center" prop="name" />
-      <el-table-column label="服务地址" align="center" :show-overflow-tooltip="true">
+      <el-table-column label="是否公开" align="center" key="status" prop="publicFlag">
         <template slot-scope="scope">
-          <router-link :to="path" class="link-type">
-            <span>{{ path }}</span>
-          </router-link>
+          <el-switch
+            v-model="scope.row.publicFlag"
+            active-value="1"
+            inactive-value="0"
+            @change="handleStatusChange(scope.row)"
+          ></el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="是否公开" align="center" prop="publicFlag">
+      <el-table-column label="服务地址" align="center" prop="path" >
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.cim_file_public" :value="scope.row.publicFlag"/>
+          <router-link :to="scope.row.path" class="link-type">
+            <span>{{ scope.row.path }}</span>
+          </router-link>
         </template>
       </el-table-column>
       <el-table-column label="存储路径" align="center" prop="path" />
@@ -100,18 +83,30 @@
         <template slot-scope="scope">
           <el-button
             size="mini"
-            type="text"
+            type="info" plain
+            icon="el-icon-download"
+            v-hasPermi="['cim:result_oblique:download']"
+          >下载</el-button>
+          <el-button
+            size="mini"
+            type="warning" plain
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['cim:result_oblique:edit']"
           >修改</el-button>
           <el-button
             size="mini"
-            type="text"
+            type="danger" plain
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['cim:result_oblique:remove']"
           >删除</el-button>
+          <el-button
+            size="mini"
+            type="success" plain
+            icon="el-icon-view"
+            v-hasPermi="['cim:result_oblique:query']"
+          >预览</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -158,6 +153,7 @@
 
 <script>
 import { listResult_oblique, getResult_oblique, delResult_oblique, addResult_oblique, updateResult_oblique } from "@/api/cim/result_oblique";
+import {changeUserStatus} from "@/api/system/user";
 
 export default {
   name: "Result_oblique",
@@ -197,6 +193,7 @@ export default {
     };
   },
   created() {
+    debugger;
     this.getList();
   },
   methods: {
@@ -298,7 +295,18 @@ export default {
       this.download('cim/result_oblique/export', {
         ...this.queryParams
       }, `result_oblique_${new Date().getTime()}.xlsx`)
-    }
+    },
+    // 文件状态修改
+    handleStatusChange(row) {
+      /*let text = row.status === "0" ? "启用" : "停用";
+      this.$modal.confirm('确认要"' + text + '""' + row.userName + '"用户吗？').then(function() {
+        return changeUserStatus(row.userId, row.status);
+      }).then(() => {
+        this.$modal.msgSuccess(text + "成功");
+      }).catch(function() {
+        row.status = row.status === "0" ? "1" : "0";
+      });*/
+    },
   }
 };
 </script>

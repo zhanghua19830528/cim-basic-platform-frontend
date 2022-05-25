@@ -81,8 +81,14 @@ export default {
     };
   },
   watch: {
+    //fileList值变化监测
     value: {
+
       handler(val) {
+        debugger;
+        console.log("val");
+        console.log(val);
+        console.log(this.fileList);
         if (val) {
           let temp = 1;
           // 首先将值转为数组
@@ -91,9 +97,13 @@ export default {
           this.fileList = list.map(item => {
             if (typeof item === "string") {
               item = { name: item, url: item };
+              console.log("item....");
+              console.log(item);
             }
             item.uid = item.uid || new Date().getTime() + temp++;
+
             return item;
+
           });
         } else {
           this.fileList = [];
@@ -152,11 +162,13 @@ export default {
     },
     // 上传成功回调
     handleUploadSuccess(res) {
-      this.uploadList.push({ name: res.fileName, url: res.fileName });
+     debugger;
+      this.uploadList.push({ name: res.newFileName, url: res.fileName ,physicalPath:res.physicalPath});
       if (this.uploadList.length === this.number) {
         this.fileList = this.fileList.concat(this.uploadList);
         this.uploadList = [];
         this.number = 0;
+        //值传输到调用控件
         this.$emit("input", this.listToString(this.fileList));
         this.$modal.closeLoading();
       }
@@ -168,6 +180,7 @@ export default {
     },
     // 获取文件名称
     getFileName(name) {
+
       if (name.lastIndexOf("/") > -1) {
         return name.slice(name.lastIndexOf("/") + 1);
       } else {
@@ -179,7 +192,9 @@ export default {
       let strs = "";
       separator = separator || ",";
       for (let i in list) {
-        strs += list[i].url + separator;
+
+        //strs += list[i].url + separator;
+        strs += list[i].physicalPath + separator;
       }
       return strs != '' ? strs.substr(0, strs.length - 1) : '';
     }
